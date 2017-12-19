@@ -13,7 +13,7 @@ setwd("...")
 #Data for 22 countries from multiple sources 
 #(Fish and Kroenig 2009, Russo and Wiberg 2010, Siaroff 2003, Seebaldt 2009, Z'Graggen 2009)
 #see text for sources 
-exeleg <- load(exeleg.Rdata)
+load(exeleg.Rdata)
 attach(exeleg)
 
 N <- length(appoint_pm)
