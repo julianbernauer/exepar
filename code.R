@@ -13,7 +13,7 @@ setwd("...")
 #Data for 22 countries from multiple sources 
 #(Fish and Kroenig 2009, Russo and Wiberg 2010, Siaroff 2003, Seebaldt 2009, Z'Graggen 2009)
 #see text for sources 
-load(exeleg.Rdata)
+load("exeleg.Rdata")
 attach(exeleg)
 
 N <- length(appoint_pm)
@@ -318,16 +318,16 @@ mcoeffs <- 0
 for(i in 1:14){mcoeffs[i] <- mean(output[,i])}
 mcoeffs <- mcoeffs[1:14]
 mcoeffs
-m.v <- c(mcoeffs[5],mcoeffs[10]/5,mcoeffs[6],mcoeffs[9],mcoeffs[4],mcoeffs[3],mcoeffs[2],mcoeffs[1],mcoeffs[14],mcoeffs[13]/5,mcoeffs[8],mcoeffs[7],mcoeffs[12],mcoeffs[11])
+m.v <- c(mcoeffs[5],mcoeffs[10]/5,mcoeffs[9],mcoeffs[4],mcoeffs[3],mcoeffs[2],mcoeffs[1],mcoeffs[6],mcoeffs[14],mcoeffs[13]/5,mcoeffs[8],mcoeffs[7],mcoeffs[12],mcoeffs[11])
 
 scoeffs <- 0
 for(i in 1:14){scoeffs[i] <- sd(output[,i])}
 scoeffs <- scoeffs[1:14]
 scoeffs
-sd.v <- c(scoeffs[5],scoeffs[10]/5,scoeffs[6],scoeffs[9],scoeffs[4],scoeffs[3],scoeffs[2],scoeffs[1],scoeffs[14],scoeffs[13]/5,scoeffs[8],scoeffs[7],scoeffs[12],scoeffs[11])
+sd.v <- c(scoeffs[5],scoeffs[10]/5,scoeffs[9],scoeffs[4],scoeffs[3],scoeffs[2],scoeffs[1],scoeffs[6],scoeffs[14],scoeffs[13]/5,scoeffs[8],scoeffs[7],scoeffs[12],scoeffs[11])
 
-var.names <- c("Wahl Regierungschef","Wahl Minister (/5)","Befragung","Initiativhoheit","Gestaltungsfeld","Gestaltungsautonomie","Abwahl","Kontrolle",
-               "Wiss. Mitarbeiter","Parl. Sekretariat (/5)","Budget","Kosten","Zeitaufwand Plenum","Zeitaufwand Komm.")
+var.names <- c("Wahl Regierungschef","Wahl Minister (/5)","Initiativhoheit","Gestaltungsfeld","Gestaltungsautonomie","Abwahl","Kontrolle","Befragung",
+               "Wiss. Mitarbeiter","Parl. Sekretariat (/5)","Einkommen","Kosten","Zeitaufwand Plenum","Zeitaufwand Komm.")
 
 y.axis <- length(var.names):1 
 layout(matrix(c(2,1),1,2),  
@@ -354,3 +354,32 @@ segments(left.side,6,left.side+.1,6)
 segments(left.side,1,left.side+.1,1)
 text(.5, 3.5, "Ressourcen", srt = 90, cex=1)
 
+
+
+#Consequences 
+
+qog <- read.csv("qog_std_cs_jan17.csv",sep=",",header=TRUE) 
+qog <- subset(qog, select=c(cname,icrg_qog))
+icrg <- c(.889,.889,.972,.889,.972,.757,.861,.889,.944,.806,.569,.861,.917,.944,.944,.972,.917,.722,.972,.889,.750,.817)
+icrg2 <- c(.889,.889,.972,.889,.972,.757,.861,.889,.944,.806,.861,.917,.944,.944,.972,.917,.722,.972,.889,.750,.817)
+krzel2 <- c("AU","BE","DK","DE","FI","FR","UK","IE","IS","IL","JP","CA","NZ","NE","NO","AT","PT","SE","CH","ES","US")
+x1b <- c(-0.095519315,1.206157338,0.492008339,0.259076073,-0.619681312,-0.904316229,-0.147825239,0.237449039,0.563038363,1.253617105,
+        -0.892850856, -0.007220409,  0.292682738 , 0.408304946,  0.419707435,  0.306568846,  0.104203771,  0.548378317,
+        0.077537068, 0.333276441, -1.001426162)
+x2b <- c(0.35278871 , 0.07643348  ,0.12870211 , 0.82633331, -0.57630454 , 0.95752414,  0.76993697,  0.20884520, -1.21965438, -0.75972865,
+         -0.65432795,  1.04079347, -0.23561040,  0.69372983, -0.01595273,  0.38840804, -0.70170013, -0.74357567, -1.03114488,
+         -1.05869737,  1.52953301)
+
+par(mfrow=c(1,2))
+plot(x1b, icrg2, xlab="Institutionen", ylab="Regierungsqualität", type="n",xlim=c(-1,1.5), ylim=c(.75,1))
+text(x1b, icrg2, krzel2, cex=1)
+abline(rega <- lm(icrg2~x1b))
+plot(x2b, icrg2, xlab="Ressourcen", ylab="Regierungsqualität", type="n",xlim=c(-1.5,2), ylim=c(.75,1))
+text(x2b, icrg2, krzel2, cex=1)
+abline(regb <- lm(icrg2~x2b))
+
+cor(x1b,icrg2)
+cor(x2b,icrg2)
+
+summary(regc <- lm(icrg2~x1b + x2b))
+summary(rega)
