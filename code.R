@@ -1,7 +1,7 @@
 #exeleg - Buchbeitrag "Aus der Balance? Das Verhältnis von Parlament und Regierung im internationalen Vergleich"
 
-#Julian Bernauer 
-#November-Dezember 2017 
+#Julian Bernauer und Martina Flick
+#Version 11. Januar 2018
 
 library(foreign)
 library(R2jags)
@@ -356,7 +356,7 @@ text(.5, 3.5, "Ressourcen", srt = 90, cex=1)
 
 
 
-#Consequences 
+#Consequences - ohne Italien 
 
 qog <- read.csv("qog_std_cs_jan17.csv",sep=",",header=TRUE) 
 qog <- subset(qog, select=c(cname,icrg_qog))
